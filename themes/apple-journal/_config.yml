@@ -1,0 +1,7 @@
+name: apple-journal
+version: 1.0.0
+description: 面向中文个人记录的克制、留白式 Hexo 主题。
+author: 小聪
+css: css/style.css
+js: js/search.js
+featured_image: css/images/featured-journal.jpg

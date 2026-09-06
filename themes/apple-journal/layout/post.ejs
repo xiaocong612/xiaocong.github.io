@@ -1,0 +1,23 @@
+<article class="reading-shell content-width">
+  <header class="reading-header">
+    <div class="post-labels">
+      <% const categories = page.categories && page.categories.toArray ? page.categories.toArray() : []; %>
+      <% categories.forEach(category => { %><a href="<%= url_for(category.path) %>"><%= category.name %></a><% }); %>
+      <time datetime="<%= page.date.toISOString() %>"><%= date(page.date, config.date_format) %></time>
+    </div>
+    <h1><%= page.title %></h1>
+    <% if (page.description) { %><p class="reading-lede"><%= page.description %></p><% } %>
+    <%- partial('_partial/post-meta', { post: page }) %>
+  </header>
+  <% if (page.cover) { %><figure class="reading-cover"><img src="<%= url_for(page.cover) %>" alt="<%= page.title %> 的封面图"><% if (page.cover_caption) { %><figcaption><%= page.cover_caption %></figcaption><% } %></figure><% } %>
+  <div class="reading-layout">
+    <% if (page.toc !== false && page.content && page.content.includes('<h')) { %>
+      <aside class="toc-panel" aria-label="文章目录"><%- partial('_partial/toc') %></aside>
+    <% } %>
+    <div class="article-body prose"><%- page.content %></div>
+  </div>
+  <footer class="reading-footer">
+    <button class="copy-button" type="button" data-copy-link><span aria-hidden="true">⧉</span> 复制链接</button>
+    <%- partial('_partial/post-meta', { post: page, footer: true }) %>
+  </footer>
+</article>

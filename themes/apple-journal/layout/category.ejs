@@ -1,0 +1,7 @@
+<%
+  const categoryPosts = page.posts.sort('date', -1).toArray();
+%>
+<div class="listing-shell content-width">
+  <header class="listing-header"><p class="section-kicker">分类</p><h1><%= page.category %></h1><p>这个分类下的全部记录。</p></header>
+  <div class="post-stream"><% categoryPosts.forEach(post => { %><%- partial('_partial/article', { post, excerpt: true }) %><% }); %></div>
+</div>

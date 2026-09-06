@@ -7,3 +7,7 @@ public/
 .deploy*/
 _multiconfig.yml
 .superpowers/
+.wrangler/
+worker/.dev.vars
+worker/.env
+coverage/

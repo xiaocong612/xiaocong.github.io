@@ -1,0 +1,59 @@
+<%
+  const posts = site.posts.sort('date', -1).toArray();
+  const featured = posts.find(post => post.pinned) || posts[0];
+  const latest = featured ? posts.filter(post => post._id !== featured._id) : posts;
+  const settings = site.data && site.data.settings ? site.data.settings : {};
+%>
+<div class="home-shell">
+  <section class="intro-band" aria-labelledby="intro-title">
+    <div class="content-width intro-layout">
+      <div>
+        <p class="eyebrow">个人记录 · 2026</p>
+        <h1 id="intro-title"><%= settings.site_name || config.title %></h1>
+        <p class="intro-copy"><%= settings.intro || config.subtitle %></p>
+      </div>
+      <a class="text-link intro-link" href="<%= url_for('/about/') %>">了解这份记录 <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+
+  <% if (featured) { %>
+    <section class="featured-band" aria-labelledby="featured-title">
+      <div class="content-width">
+        <p class="section-kicker">精选文章</p>
+        <article class="featured-story">
+          <div class="featured-copy">
+            <div class="post-labels">
+              <% const featuredCategories = featured.categories && featured.categories.toArray ? featured.categories.toArray() : []; %>
+              <% featuredCategories.slice(0, 1).forEach(category => { %><a href="<%= url_for(category.path) %>"><%= category.name %></a><% }); %>
+              <time datetime="<%= featured.date.toISOString() %>"><%= date(featured.date, config.date_format) %></time>
+            </div>
+            <h2 id="featured-title"><a href="<%= url_for(featured.path) %>"><%= featured.title %></a></h2>
+            <p><%= featured.description || strip_html(featured.excerpt || featured.content).slice(0, 180) %></p>
+            <a class="button-link" href="<%= url_for(featured.path) %>">阅读精选文章 <span aria-hidden="true">→</span></a>
+          </div>
+          <a class="featured-media" href="<%= url_for(featured.path) %>" aria-label="阅读：<%= featured.title %>">
+            <img src="<%= url_for(featured.cover || theme.featured_image) %>" alt="<%= featured.title %> 的封面图" loading="eager">
+          </a>
+        </article>
+      </div>
+    </section>
+  <% } %>
+
+  <section class="stream-band" aria-labelledby="stream-title">
+    <div class="content-width">
+      <div class="section-heading">
+        <div><p class="section-kicker">最近更新</p><h2 id="stream-title">继续往下读</h2></div>
+        <a class="text-link" href="<%= url_for('/archives/') %>">查看全部 <span aria-hidden="true">↗</span></a>
+      </div>
+      <% if (latest.length) { %>
+        <div class="post-stream">
+          <% latest.forEach(post => { %>
+            <%- partial('_partial/article', { post, excerpt: true }) %>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <p class="empty-state">还没有更多文章，下一篇就从这里开始。</p>
+      <% } %>
+    </div>
+  </section>
+</div>

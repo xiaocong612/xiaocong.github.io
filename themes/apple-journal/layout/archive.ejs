@@ -1,0 +1,17 @@
+<%
+  const archivePosts = (page.posts || site.posts).sort('date', -1).toArray();
+  const years = [...new Set(archivePosts.map(post => date(post.date, 'YYYY')))]
+%>
+<div class="listing-shell content-width">
+  <header class="listing-header"><p class="section-kicker">时间线</p><h1>归档</h1><p>按时间回看每一次记录。</p></header>
+  <% years.forEach(year => { %>
+    <section class="archive-year" aria-labelledby="year-<%= year %>">
+      <h2 id="year-<%= year %>"><%= year %></h2>
+      <div class="archive-list">
+        <% archivePosts.filter(post => date(post.date, 'YYYY') === year).forEach(post => { %>
+          <a class="archive-item" href="<%= url_for(post.path) %>"><time datetime="<%= post.date.toISOString() %>"><%= date(post.date, 'MM-DD') %></time><span><%= post.title %></span><span aria-hidden="true">↗</span></a>
+        <% }); %>
+      </div>
+    </section>
+  <% }); %>
+</div>

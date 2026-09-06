@@ -1,0 +1,8 @@
+<%
+  const metaTags = post.tags && post.tags.toArray ? post.tags.toArray() : [];
+%>
+<% const isFooter = typeof footer !== 'undefined' && Boolean(footer); %>
+<div class="post-meta<%= isFooter ? ' post-meta-footer' : '' %>">
+  <% if (!isFooter) { %><span><%= Math.max(1, Math.round(strip_html(post.content || '').split(/\s+/).length / 220)) %> 分钟阅读</span><% } %>
+  <% if (metaTags.length) { %><div class="tag-list"><% metaTags.forEach(tag => { %><a href="<%= url_for(tag.path) %>">#<%= tag.name %></a><% }); %></div><% } %>
+</div>

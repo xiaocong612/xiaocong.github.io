@@ -1,0 +1,12 @@
+name = "xiaocong-blog-oauth"
+main = "src/index.js"
+compatibility_date = "2026-09-06"
+
+[vars]
+CMS_ORIGIN = "https://xiaocong612.github.io"
+REPO_OWNER = "xiaocong612"
+REPO_NAME = "xiaocong.github.io"
+
+# 请使用 wrangler secret put 设置以下密钥，不要写入此文件。
+# GITHUB_CLIENT_ID = "从 GitHub OAuth 应用复制的客户端 ID"
+# GITHUB_CLIENT_SECRET = "通过 wrangler secret put 写入"

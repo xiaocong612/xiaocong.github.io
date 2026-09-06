@@ -1,0 +1,92 @@
+# 小聪的记录：Hexo 站点配置
+
+# 站点基本信息
+title: 小聪的记录
+subtitle: 技术、学习与生活的长期记录
+description: 一个用中文记录技术实践、学习过程与生活随笔的个人博客。
+keywords:
+  - 技术
+  - 学习
+  - 随笔
+author: 小聪
+language: zh-CN
+timezone: Asia/Shanghai
+
+# 站点地址
+url: https://xiaocong612.github.io
+permalink: :year/:month/:day/:title/
+permalink_defaults:
+pretty_urls:
+  trailing_index: true
+  trailing_html: true
+
+# Directory
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render:
+
+# 写作
+new_post_name: :title.md
+default_layout: post
+titlecase: false
+external_link:
+  enable: true
+  field: site
+  exclude: ''
+filename_case: 0
+render_drafts: false
+post_asset_folder: false
+relative_link: false
+future: true
+syntax_highlighter: highlight.js
+highlight:
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  preprocess: true
+  line_number: true
+  tab_replace: ''
+
+# 首页设置
+index_generator:
+  path: ''
+  per_page: 10
+  order_by: -date
+
+# 分类与标签
+default_category: 随笔
+category_map:
+tag_map:
+
+# 页面元信息
+meta_generator: true
+
+# 日期与时间格式
+date_format: YYYY-MM-DD
+time_format: HH:mm
+updated_option: 'mtime'
+
+# 分页
+per_page: 10
+pagination_dir: page
+
+# 包含与排除
+include:
+exclude:
+ignore:
+
+# 主题
+theme: apple-journal
+
+# 文章渲染
+marked:
+  prependRoot: true
+  postAsset: false

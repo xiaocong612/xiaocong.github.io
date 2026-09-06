@@ -1,0 +1,7 @@
+<%
+  const tagPosts = page.posts.sort('date', -1).toArray();
+%>
+<div class="listing-shell content-width">
+  <header class="listing-header"><p class="section-kicker">标签</p><h1>#<%= page.tag %></h1><p>带有这个标签的记录。</p></header>
+  <div class="post-stream"><% tagPosts.forEach(post => { %><%- partial('_partial/article', { post, excerpt: true }) %><% }); %></div>
+</div>

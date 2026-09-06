@@ -1,0 +1,76 @@
+backend:
+  name: github
+  repo: xiaocong612/xiaocong.github.io
+  branch: main
+  auth_endpoint: https://blog-oauth-worker.example.workers.dev/auth
+  auth_scope: repo
+
+site_url: https://xiaocong612.github.io
+locale: zh_Hans
+publish_mode: editorial_workflow
+media_folder: source/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: posts
+    label: 文章
+    label_singular: 文章
+    description: 管理技术、学习和随笔文章。
+    folder: source/_posts
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    sortable_fields: [date, title]
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 摘要, name: description, widget: text, required: false }
+      - { label: 发布时间, name: date, widget: datetime, format: "YYYY-MM-DD HH:mm:ss", date_format: "YYYY-MM-DD", time_format: "HH:mm:ss" }
+      - label: 分类
+        name: categories
+        widget: select
+        multiple: true
+        options: [技术, 学习, 随笔]
+        default: [随笔]
+      - label: 标签
+        name: tags
+        widget: list
+        required: false
+        field: { label: 标签, name: tag, widget: string }
+      - { label: 封面图片, name: cover, widget: image, required: false }
+      - { label: 置顶文章, name: pinned, widget: boolean, default: false, required: false }
+      - { label: 草稿, name: draft, widget: boolean, default: false, required: false }
+      - { label: 正文, name: body, widget: markdown }
+
+  - name: about
+    label: 关于页
+    description: 编辑博客的自我介绍和说明。
+    files:
+      - name: about
+        label: 关于我
+        file: source/about/index.md
+        fields:
+          - { label: 标题, name: title, widget: string, default: 关于我 }
+          - { label: 摘要, name: description, widget: text, required: false }
+          - { label: 页面布局, name: layout, widget: hidden, default: page }
+          - { label: 正文, name: body, widget: markdown }
+
+  - name: settings
+    label: 站点设置
+    description: 编辑首页介绍、页脚和社交链接。
+    files:
+      - name: site-settings
+        label: 基本设置
+        file: source/_data/settings.yml
+        fields:
+          - { label: 站点名称, name: site_name, widget: string }
+          - { label: 副标题, name: tagline, widget: string }
+          - { label: 首页介绍, name: intro, widget: text }
+          - { label: 页脚说明, name: footer_note, widget: string }
+          - label: 社交链接
+            name: social
+            widget: object
+            required: false
+            fields:
+              - { label: GitHub 地址, name: github, widget: string, required: false }

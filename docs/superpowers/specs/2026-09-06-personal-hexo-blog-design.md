@@ -1,57 +1,57 @@
-# Apple-Inspired Personal Hexo Blog Design
+# 个人 Hexo 博客设计说明
 
-## Purpose
+## 目标
 
-Convert the unfinished default Hexo site into a Chinese personal blog for mixed technical notes, learning records, and essays. The site will use an original, Apple-inspired visual system: restrained typography, generous whitespace, clear hierarchy, subtle depth, and accessible light and dark modes. It will not reuse Apple branding, artwork, or copy.
+将未完成的默认 Hexo 站点改造成中文个人博客，用于记录技术笔记、学习过程与生活随笔。网站采用原创的 Apple 风格设计语言：克制的排版、充足的留白、清晰的信息层级、轻微的空间层次，以及易读的浅色和深色模式；不使用 Apple 的品牌、图像或文案。
 
-The author will publish primarily from local Markdown files, while retaining a complete browser-based administrative interface for writing, editing, managing media, and publishing from any device.
+博客以本地 Markdown 写作为主要发布方式，同时保留完整的网页管理后台，支持在任意设备上撰写、编辑、管理图片与发布文章。站点文案、说明文档和博客 Markdown 内容均使用中文。
 
-## Confirmed Decisions
+## 已确认的决定
 
-- Site name: `小聪的记录`.
-- Author: `小聪`.
-- Content types: technical notes, learning records, and essays in one chronological blog.
-- Homepage direction: featured narrative layout. A lead card highlights the latest or pinned article before the chronological article stream.
-- Hosting: GitHub Pages, published through GitHub Actions.
-- Repository: `xiaocong612/xiaocong.github.io`, with `main` containing source rather than generated site files.
-- Browser administration: Decap CMS using the GitHub backend and a Cloudflare Worker for GitHub OAuth.
-- Existing remote contents may be replaced during the initial source push.
+- 站点名称：`小聪的记录`。
+- 作者：`小聪`。
+- 内容类型：技术笔记、学习记录与随笔，统一按时间流展示。
+- 首页方向：精选叙事式布局。首屏突出最新或置顶文章，下面衔接按时间排列的文章流。
+- 托管方式：GitHub Pages，通过 GitHub Actions 发布。
+- 仓库：`xiaocong612/xiaocong.github.io`，`main` 分支保存源码而非生成后的网页文件。
+- 网页后台：Decap CMS，使用 GitHub 后端与 Cloudflare Worker 完成 GitHub OAuth 登录。
+- 首次推送源码时允许覆盖远程仓库现有内容。
 
-## Site Architecture
+## 站点架构
 
-### Source and deployment
+### 源码与发布
 
-The repository will contain the Hexo project, content, custom theme, CMS configuration, Cloudflare Worker source, and GitHub Actions workflow. Generated `public/` files remain ignored and are never pushed as the source of truth.
+仓库包含 Hexo 项目、文章、定制主题、后台配置、Cloudflare Worker 源码和 GitHub Actions 工作流。生成的 `public/` 文件始终被忽略，不作为源码提交。
 
-The current `hexo-deployer-git` pattern is intentionally removed from the publishing path. Its existing configuration attempts to deploy generated files into the same repository branch that will hold source files. That would overwrite source files and prevents a CMS from editing posts safely.
+现有的 `hexo-deployer-git` 发布模式不再用于正式发布。它会将生成文件部署到将来存放源码的同一仓库分支中，从而覆盖源码，也无法让后台安全地编辑文章。
 
-GitHub Actions will run on pushes to `main`, manual dispatches, and an hourly schedule. It will install dependencies, validate the site, generate Hexo output, and publish the generated artifact with the official GitHub Pages deployment action. Future-dated posts use Hexo's normal date handling and become visible on the next scheduled build after their publication time.
+GitHub Actions 在推送到 `main`、手动触发或每小时定时运行时执行：安装依赖、校验站点、生成 Hexo 页面，并用官方 GitHub Pages 发布动作上传生成产物。未来日期的文章使用 Hexo 正常的时间判断，并在发布日期之后的下一次定时构建中出现。
 
-The workflow uses only the scoped `GITHUB_TOKEN` permissions required to read repository contents and publish Pages. A failed workflow leaves the previously deployed site unchanged.
+工作流只使用读取仓库内容和发布 Pages 所需的最小 `GITHUB_TOKEN` 权限。工作流失败不会替换当前已上线的站点。
 
-### Custom theme
+### 定制主题
 
-An in-repository `apple-journal` theme replaces the default Landscape theme. It owns all templates and styles so package updates cannot overwrite visual changes.
+项目内的 `apple-journal` 主题替代默认 Landscape 主题，所有模板和样式均由项目自身维护，依赖升级不会覆盖视觉调整。
 
-The theme provides:
+主题包含：
 
-- A compact top navigation with the site name, 首页, 归档, 关于, and a search control.
-- A featured homepage section with an original editorial cover image and the most recent pinned post, falling back to the newest post when none are pinned.
-- A chronological article stream whose category labels distinguish 技术, 学习, and 随笔 with restrained accent colors.
-- Article pages with a readable single-column measure, metadata, tags, cover image, mobile table of contents, code blocks, adjacent-post navigation, and share/copy-link affordances.
-- Archive and category pages generated from post metadata, plus an editable about page.
-- Local static search, built with a generated index and executed in the visitor's browser without analytics or tracking.
-- Responsive layouts for phone, tablet, and desktop, plus light and dark variants driven by the device preference.
+- 紧凑的顶部导航：站点名、首页、归档、关于和搜索入口。
+- 首页精选区：使用原创的编辑风格封面图，展示最新置顶文章；没有置顶文章时自动展示最新文章。
+- 按时间排列的文章流，并以低饱和强调色区分技术、学习与随笔分类。
+- 舒展的单栏文章页：元数据、标签、封面图、移动端目录、代码块、相邻文章导航和复制链接工具。
+- 由文章元数据自动生成的归档页、分类页，以及可在后台编辑的关于页。
+- 静态本地搜索：索引在构建时生成，搜索完全在访客浏览器内执行，不收集分析数据。
+- 适配手机、平板和桌面，并跟随设备偏好提供浅色与深色模式。
 
-No Apple logos, product images, proprietary fonts, or copied layouts will be used. The initial featured image will be an original editorial bitmap asset suitable for a personal journal.
+不会使用 Apple 标志、产品照片、专有字体或复制的页面布局。首张精选封面图将是适合个人日志的原创位图素材。
 
-### Content model
+### 内容模型
 
-Posts remain ordinary Markdown files in `source/_posts`. Each post uses this front matter:
+文章仍是 `source/_posts` 中的普通 Markdown 文件，每篇文章采用以下元数据：
 
 ```yaml
-title: Article title
-description: Short summary for the homepage and sharing metadata
+title: 文章标题
+description: 用于首页和分享信息的简短摘要
 date: 2026-09-06 14:00:00
 categories:
   - 技术
@@ -62,64 +62,64 @@ pinned: false
 draft: false
 ```
 
-`categories` accepts 技术, 学习, or 随笔. Tags are free-form. `description`, `cover`, and `pinned` are optional, while title, date, category, and body are required. The default Hexo English welcome post is removed and replaced by one Chinese welcome/template post.
+`categories` 可使用技术、学习或随笔；标签可自由填写。摘要、封面与置顶状态可选，标题、日期、分类和正文必填。默认英文欢迎文章会被移除，替换为一篇可复用的中文欢迎/模板文章。
 
-Images live below `source/images/uploads`. This makes them editable locally, selectable from the CMS, versioned in Git, and available under stable public paths.
+图片存放在 `source/images/uploads` 下，既可在本地编辑，也可在后台选择，随 Git 进行版本管理，并具有稳定的公开访问路径。
 
-## Publishing Workflows
+## 发布工作流
 
-### Local-first workflow
+### 本地优先工作流
 
-The author may edit posts using Obsidian, Typora, VS Code, or another Markdown editor. Project commands will be exposed through `package.json`:
+作者可使用 Obsidian、Typora、VS Code 或其他 Markdown 编辑器修改文章。`package.json` 将提供以下命令：
 
-- `npm run post -- "标题"` creates a Chinese post template with the standard front matter.
-- `npm run preview` starts a local browser preview.
-- `npm run check` validates configuration and generates the static site without publishing.
-- `npm run publish -- "发布说明"` checks the site, commits changed source files with the supplied message, and pushes `main` for GitHub Actions to deploy.
+- `npm run post -- "标题"`：创建带有标准中文元数据的文章模板。
+- `npm run preview`：启动本地浏览器预览。
+- `npm run check`：校验配置并生成静态页面，不发布。
+- `npm run publish -- "发布说明"`：先检查站点，再用给定说明提交源码并推送 `main`，由 GitHub Actions 自动上线。
 
-The publishing helper stops before committing when validation fails. Git authentication remains the operating system's existing Git credential or SSH configuration; credentials are never placed in scripts or repository files.
+发布辅助脚本会在校验失败时停止，不会提交或推送半成品。Git 身份验证继续使用操作系统现有的 Git 凭据或 SSH 设置，脚本和仓库中不保存凭据。
 
-### Browser CMS workflow
+### 网页后台工作流
 
-`/admin/` hosts Decap CMS. After signing in through GitHub, the author can:
+`/admin/` 提供 Decap CMS。通过 GitHub 登录后，作者可以：
 
-- Create, edit, delete, preview, and publish posts.
-- Set title, description, date, category, tags, cover, pinned state, draft state, and Markdown body using form fields.
-- Upload and select images from the repository media library.
-- Edit the about page.
-- Edit site-level information such as the subtitle and optional social links.
+- 新建、编辑、删除、预览和发布文章。
+- 通过表单填写标题、摘要、日期、分类、标签、封面、置顶状态、草稿状态和 Markdown 正文。
+- 上传图片，并从仓库媒体库中选择图片。
+- 编辑关于页。
+- 编辑站点副标题和可选社交链接等站点信息。
 
-Decap commits the same Markdown and image files used by the local workflow. Its collections include posts, the about page, and a site settings data file. This ensures both workflows have identical content ownership and Git history.
+Decap 提交与本地工作流完全相同的 Markdown 和图片文件。后台集合包含文章、关于页与站点设置文件，因此两种工作流使用相同的内容来源和 Git 历史。
 
-### OAuth boundary
+### OAuth 边界
 
-Decap's GitHub backend requires a browser login callback. A Cloudflare Worker handles that OAuth exchange at a dedicated worker URL. The public CMS configuration stores only the GitHub OAuth client ID and the worker's public URL. The GitHub OAuth client secret is stored exclusively as an encrypted Cloudflare Worker secret.
+Decap 的 GitHub 后端需要浏览器登录回调。Cloudflare Worker 在独立 Worker 地址处理 OAuth 交换。公开的后台配置只包含 GitHub OAuth 客户端 ID 和 Worker 的公开地址；GitHub OAuth 客户端密钥只作为加密的 Cloudflare Worker 密钥保存。
 
-The Worker accepts only the configured site origin and returns the authorization result to the CMS popup. It does not store content, visitor data, credentials, or analytics. The OAuth application is configured with the exact Worker callback URL and access is restricted to the author's GitHub account and blog repository.
+Worker 只接受配置的站点来源，并将授权结果返回给后台弹窗。它不保存文章、访问者数据、凭据或分析数据。OAuth 应用配置精确的 Worker 回调地址，访问权限仅授予作者的 GitHub 账户与博客仓库。
 
-## Failure Handling and Security
+## 故障处理与安全
 
-- Invalid YAML, missing required post metadata, and broken rendering fail `npm run check` before any local commit or push.
-- A GitHub Actions build failure leaves the deployed Pages revision in place and exposes its log in the Actions tab.
-- CMS authentication errors, expired sessions, and network interruptions show an actionable error and do not silently publish partial content. Browser-draft recovery is enabled where Decap supports it.
-- The custom Worker supplies explicit origin checks, callback validation, and no secret-bearing browser responses.
-- Git history is the recovery mechanism for post, media, template, and configuration changes.
-- `.superpowers/`, generated HTML, build data, dependencies, and deployment working directories remain outside version control.
+- 无效 YAML、缺少必填文章元数据和渲染错误都会使 `npm run check` 在本地提交或推送前失败。
+- GitHub Actions 构建失败会保留现有 Pages 版本，并在 Actions 页面提供日志。
+- 后台登录失败、会话过期或网络中断时会显示可操作的错误信息，不会静默发布不完整内容；在 Decap 支持的范围内启用浏览器草稿恢复。
+- 定制 Worker 明确检查来源、验证回调，并且不向浏览器返回包含密钥的数据。
+- Git 历史是文章、图片、模板和配置的恢复机制。
+- `.superpowers/`、生成页面、构建数据、依赖和部署工作目录均不纳入版本控制。
 
-## Verification Plan
+## 验收计划
 
-Before the initial push, verify:
+首次推送前验证：
 
-- Hexo configuration parses and `npm run check` successfully generates the complete site.
-- Generated output contains the homepage, a post page, archives, categories, about page, local search assets, and CMS entry point.
-- The default sample content no longer appears.
-- Required post front matter is accepted, and intentionally malformed front matter causes validation to fail.
-- The CMS YAML configuration maps each visible form field to the expected Markdown or settings path.
-- Desktop and mobile browser screenshots show readable text, stable navigation, no overlapping content, and functioning light/dark presentation.
-- The GitHub Actions workflow syntax, Pages permissions, and deployment artifact path are correct.
+- Hexo 配置能够解析，且 `npm run check` 可成功生成完整站点。
+- 生成结果包含首页、文章页、归档、分类、关于页、本地搜索资源和后台入口。
+- 默认示例内容不再出现。
+- 正确的文章元数据能够通过，故意写错的元数据会使校验失败。
+- 后台 YAML 配置的每个可见表单字段都映射到预期的 Markdown 或设置文件路径。
+- 桌面和手机浏览器截图中，文字可读、导航稳定、内容不重叠，浅色和深色模式均正常。
+- GitHub Actions 工作流语法、Pages 权限和发布产物路径正确。
 
-After the first remote push, verify the deployed public URL, one local-origin post publication, one CMS-origin draft or publication, and the GitHub OAuth login callback.
+首次推送到远程后，验证公开站点地址、一次本地来源文章发布、一次后台来源草稿或发布，以及 GitHub OAuth 登录回调。
 
-## Account Setup Required During Launch
+## 上线时需要账户操作的部分
 
-The author will sign in to GitHub to authorize source pushing and Pages settings, create the GitHub OAuth application, and sign in to Cloudflare to deploy the Worker and set its secrets. The implementation can prepare every file, command, callback value, and configuration field before these account-bound actions. No credentials will be requested or written to the workspace.
+作者需要登录 GitHub 以授权源码推送和 Pages 设置、创建 GitHub OAuth 应用，并登录 Cloudflare 以部署 Worker 和设置密钥。实现阶段会提前准备所有文件、命令、回调地址和配置项；涉及账户登录或密钥粘贴时会明确停下等待作者完成，且不会索取或把凭据写入工作区。

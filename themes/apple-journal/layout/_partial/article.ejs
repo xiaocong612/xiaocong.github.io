@@ -1,0 +1,17 @@
+<%
+  const labels = post.categories && post.categories.toArray ? post.categories.toArray() : [];
+  const tags = post.tags && post.tags.toArray ? post.tags.toArray() : [];
+  const summary = post.description || strip_html(post.excerpt || post.content || '').replace(/\s+/g, ' ').slice(0, 180);
+%>
+<article class="stream-item">
+  <div class="stream-item-main">
+    <div class="post-labels">
+      <% labels.slice(0, 1).forEach(category => { %><a href="<%= url_for(category.path) %>"><%= category.name %></a><% }); %>
+      <time datetime="<%= post.date.toISOString() %>"><%= date(post.date, config.date_format) %></time>
+    </div>
+    <h3><a href="<%= url_for(post.path) %>"><%= post.title %></a></h3>
+    <% if (excerpt !== false) { %><p><%= summary %></p><% } %>
+    <% if (tags.length) { %><div class="tag-list"><% tags.slice(0, 3).forEach(tag => { %><a href="<%= url_for(tag.path) %>">#<%= tag.name %></a><% }); %></div><% } %>
+  </div>
+  <a class="stream-arrow" href="<%= url_for(post.path) %>" aria-label="阅读：<%= post.title %>"><span aria-hidden="true">↗</span></a>
+</article>
