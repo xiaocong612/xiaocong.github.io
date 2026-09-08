@@ -6,6 +6,16 @@ const yaml = require('js-yaml');
 
 const rootDir = path.join(__dirname, '..');
 const configPath = path.join(rootDir, 'source', 'admin', 'config.yml');
+const siteConfigPath = path.join(rootDir, '_config.yml');
+
+test('站点按发布日期显示文章，并原样发布 CMS 静态文件', () => {
+  const config = yaml.load(fs.readFileSync(siteConfigPath, 'utf8'));
+  assert.equal(config.future, false);
+  assert.ok(config.skip_render.includes('admin/**'));
+  assert.equal(config.root, '/xiaocong.github.io/');
+  assert.equal(config.marked.sanitizeUrl, true);
+  assert.equal(config.marked.dompurify, true);
+});
 
 test('Decap CMS 入口和配置存在', () => {
   assert.equal(fs.existsSync(path.join(rootDir, 'source', 'admin', 'index.html')), true);
@@ -14,7 +24,14 @@ test('Decap CMS 入口和配置存在', () => {
   assert.equal(config.backend.name, 'github');
   assert.equal(config.backend.repo, 'xiaocong612/xiaocong.github.io');
   assert.equal(config.backend.branch, 'main');
-  assert.match(config.backend.auth_endpoint, /\/auth$/);
+  const oauthBaseUrl = new URL(config.backend.base_url);
+  assert.equal(oauthBaseUrl.protocol, 'https:');
+  assert.equal(oauthBaseUrl.pathname, '/');
+  assert.equal(oauthBaseUrl.search, '');
+  assert.equal(oauthBaseUrl.hash, '');
+  assert.equal(config.backend.auth_endpoint, 'auth');
+  assert.equal(config.backend.auth_scope, 'public_repo');
+  assert.equal(config.site_url, 'https://xiaocong612.github.io/xiaocong.github.io/');
   assert.equal(config.media_folder, 'source/images/uploads');
   assert.equal(config.public_folder, '/images/uploads');
 });

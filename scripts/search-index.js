@@ -7,6 +7,14 @@ function values(collection) {
   return Array.isArray(collection) ? collection : [];
 }
 
+function formatSearchDate(date) {
+  if (date && typeof date.format === 'function') return date.format('YYYY-MM-DD');
+
+  const parsed = new Date(date);
+  const pad = value => String(value).padStart(2, '0');
+  return `${parsed.getFullYear()}-${pad(parsed.getMonth() + 1)}-${pad(parsed.getDate())}`;
+}
+
 function buildSearchIndex(hexo) {
   const posts = values(hexo.locals.get('posts')).filter(post => !post.draft);
   return posts.map(post => {
@@ -18,7 +26,7 @@ function buildSearchIndex(hexo) {
       description,
       category: categories[0] ? categories[0].name : '随笔',
       tags: tags.map(tag => tag.name),
-      date: post.date.toISOString().slice(0, 10),
+      date: formatSearchDate(post.date),
       url: `/${String(post.path || '').replace(/^\/+/, '')}`
     };
   });
@@ -34,4 +42,4 @@ function registerSearchIndex(hexo) {
 
 if (typeof hexo !== 'undefined') registerSearchIndex(hexo);
 
-module.exports = { buildSearchIndex, registerSearchIndex };
+module.exports = { buildSearchIndex, formatSearchDate, registerSearchIndex };

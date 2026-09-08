@@ -14,6 +14,7 @@ timezone: Asia/Shanghai
 
 # 站点地址
 url: https://xiaocong612.github.io
+root: /xiaocong.github.io/
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -29,6 +30,7 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
+  - admin/**
 
 # 写作
 new_post_name: :title.md
@@ -42,7 +44,7 @@ filename_case: 0
 render_drafts: false
 post_asset_folder: false
 relative_link: false
-future: true
+future: false
 syntax_highlighter: highlight.js
 highlight:
   line_number: true
@@ -90,3 +92,5 @@ theme: apple-journal
 marked:
   prependRoot: true
   postAsset: false
+  sanitizeUrl: true
+  dompurify: true

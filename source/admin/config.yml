@@ -2,10 +2,11 @@ backend:
   name: github
   repo: xiaocong612/xiaocong.github.io
   branch: main
-  auth_endpoint: https://blog-oauth-worker.example.workers.dev/auth
-  auth_scope: repo
+  base_url: https://blog-oauth-worker.example.workers.dev
+  auth_endpoint: auth
+  auth_scope: public_repo
 
-site_url: https://xiaocong612.github.io
+site_url: https://xiaocong612.github.io/xiaocong.github.io/
 locale: zh_Hans
 publish_mode: editorial_workflow
 media_folder: source/images/uploads

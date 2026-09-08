@@ -106,7 +106,7 @@ button, input { font: inherit; }
 .stream-arrow:hover { background: var(--accent-soft); transform: translate(2px, -2px); }
 .empty-state { margin: 24px 0; color: var(--muted); }
 
-.reading-shell { padding: 86px 0 100px; }
+.reading-shell { padding: 86px 24px 100px; }
 .reading-header { max-width: 780px; margin: 0 auto 54px; }
 .reading-header h1 { margin: 18px 0 16px; font-size: 48px; line-height: 1.2; letter-spacing: -.025em; }
 .reading-lede { margin: 0; color: var(--muted); font-size: 20px; line-height: 1.6; }
@@ -135,6 +135,9 @@ button, input { font: inherit; }
 .prose code { padding: 2px 6px; color: var(--coral); background: var(--surface-muted); border-radius: 4px; font-size: .9em; }
 .prose pre { margin: 1.6em 0; padding: 20px; overflow-x: auto; background: #1d1d1f; color: #f5f5f7; border-radius: 6px; font-size: 14px; line-height: 1.65; }
 .prose pre code { padding: 0; color: inherit; background: transparent; }
+.prose .highlight { max-width: 100%; margin: 1.6em 0; overflow-x: auto; border-radius: 6px; }
+.prose .highlight table { width: max-content; min-width: 100%; margin: 0; border-spacing: 0; }
+.prose .highlight pre { margin: 0; border-radius: 0; }
 .prose img { margin: 1.6em auto; border-radius: 6px; }
 .prose hr { margin: 2.5em 0; border: 0; border-top: 1px solid var(--line); }
 .reading-footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 780px; margin: 64px auto 0; padding-top: 22px; border-top: 1px solid var(--line); }
@@ -142,7 +145,7 @@ button, input { font: inherit; }
 .copy-button:hover, .copy-button:focus-visible { color: var(--accent); border-color: var(--accent); }
 .post-meta-footer { margin: 0; }
 
-.listing-shell, .search-shell { padding: 86px 0 110px; }
+.listing-shell, .search-shell { padding: 86px 24px 110px; }
 .listing-header { max-width: 740px; margin-bottom: 52px; }
 .listing-header h1 { margin: 0; font-size: 48px; line-height: 1.2; letter-spacing: -.025em; }
 .listing-header p:not(.section-kicker) { margin: 18px 0 0; color: var(--muted); font-size: 18px; }
@@ -197,7 +200,7 @@ button, input { font: inherit; }
   .stream-item { align-items: flex-start; padding: 24px 0; }
   .stream-item h3 { font-size: 21px; }
   .stream-item p { font-size: 15px; line-height: 1.65; }
-  .reading-shell, .listing-shell, .search-shell { padding: 57px 0 76px; }
+  .reading-shell, .listing-shell, .search-shell { padding: 57px 18px 76px; }
   .reading-header { margin-bottom: 38px; }
   .reading-header h1, .listing-header h1 { font-size: 34px; }
   .reading-lede { font-size: 17px; }
