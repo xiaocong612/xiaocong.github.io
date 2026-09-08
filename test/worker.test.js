@@ -69,3 +69,50 @@ test('成功回调生成 Decap 登录消息', async () => {
   assert.equal(JSON.parse(exchangeRequest.body).client_secret, env.GITHUB_CLIENT_SECRET);
   assert.doesNotMatch(html, /client-secret/);
 });
+
+test('用户取消 GitHub 授权时生成 Decap 错误消息', async () => {
+  const { createState, handleRequest } = await workerModule;
+  const redirectUri = 'https://oauth.example.workers.dev/callback';
+  const state = await createState({ origin: env.CMS_ORIGIN, redirectUri, secret: env.GITHUB_CLIENT_SECRET });
+  const response = await handleRequest(
+    new Request(`https://oauth.example.workers.dev/callback?error=access_denied&state=${encodeURIComponent(state)}`),
+    env
+  );
+  const html = await response.text();
+  assert.equal(response.status, 200);
+  assert.match(html, /authorization:github:error/);
+  assert.match(html, /你已取消 GitHub 授权/);
+});
+
+test('GitHub 令牌交换失败时生成 Decap 错误消息', async () => {
+  const { createState, handleRequest } = await workerModule;
+  const redirectUri = 'https://oauth.example.workers.dev/callback';
+  const state = await createState({ origin: env.CMS_ORIGIN, redirectUri, secret: env.GITHUB_CLIENT_SECRET });
+  const response = await handleRequest(
+    new Request(`https://oauth.example.workers.dev/callback?code=code-123&state=${encodeURIComponent(state)}`),
+    env,
+    {},
+    async () => new Response('上游错误', { status: 502 })
+  );
+  const html = await response.text();
+  assert.equal(response.status, 502);
+  assert.match(response.headers.get('content-type'), /^text\/html/);
+  assert.match(html, /authorization:github:error/);
+  assert.match(html, /GitHub 登录交换失败/);
+});
+
+test('GitHub 没有返回令牌时生成 Decap 错误消息', async () => {
+  const { createState, handleRequest } = await workerModule;
+  const redirectUri = 'https://oauth.example.workers.dev/callback';
+  const state = await createState({ origin: env.CMS_ORIGIN, redirectUri, secret: env.GITHUB_CLIENT_SECRET });
+  const response = await handleRequest(
+    new Request(`https://oauth.example.workers.dev/callback?code=code-123&state=${encodeURIComponent(state)}`),
+    env,
+    {},
+    async () => new Response(JSON.stringify({ error: 'bad_verification_code' }), { status: 200 })
+  );
+  const html = await response.text();
+  assert.equal(response.status, 502);
+  assert.match(html, /authorization:github:error/);
+  assert.match(html, /GitHub 未返回有效登录令牌/);
+});

@@ -56,6 +56,8 @@ npm run publish -- "更新文章"
 3. 将 Worker 的公开根地址写入 `source/admin/config.yml` 的 `base_url`，并保持 `auth_endpoint: auth`。
 4. 确认 Worker 的 `CMS_ORIGIN` 为 `https://xiaocong612.github.io`。这是来源地址，不能附加项目路径或 `/admin/`。本仓库的 GitHub Pages 已使用 GitHub Actions 发布。
 
+如果在 GitHub 授权页选择取消，或 GitHub 暂时无法交换令牌，后台会收到中文错误提示并结束登录弹窗；无需手动清理残留窗口。
+
 ## 内容安全
 
 - Markdown 渲染会净化不安全的 HTML 和链接，阻止脚本、事件处理属性与 `javascript:` 链接进入文章页面。
@@ -78,9 +80,10 @@ npm run publish -- "更新文章"
 ```bash
 npm test
 npm run check
+npm run build
 git diff --check
 ```
 
-当前自动化测试共 31 项。提交或发布前应依次完成以上检查。
+当前自动化测试共 34 项。提交或发布前应依次完成以上检查。
 
 所有站点文案、文章和说明文档均使用中文；命令、路径、配置键和第三方产品名保留原格式，便于直接执行或检索。

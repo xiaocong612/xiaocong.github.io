@@ -130,6 +130,27 @@ function callbackHtml(token, cmsOrigin) {
 </script></body></html>`;
 }
 
+function callbackErrorHtml(error, cmsOrigin) {
+  const safeError = JSON.stringify({ message: error }).replace(/</g, '\\u003c');
+  const safeOrigin = JSON.stringify(cmsOrigin);
+  return `<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>登录未完成</title></head>
+<body><p>登录未完成，请返回内容管理页面重试。</p>
+<script>
+(() => {
+  const targetOrigin = ${safeOrigin};
+  const message = 'authorization:github:error:' + ${JSON.stringify(safeError)};
+  const receiveMessage = (event) => {
+    if (event.origin !== targetOrigin || !window.opener) return;
+    window.opener.postMessage(message, targetOrigin);
+    window.close();
+  };
+  window.addEventListener('message', receiveMessage, false);
+  if (window.opener) window.opener.postMessage('authorizing:github', targetOrigin);
+})();
+</script></body></html>`;
+}
+
 async function handleCallback(request, env, fetchImpl) {
   const cmsOrigin = requiredOrigin(env);
   if (!cmsOrigin) return json({ error: 'OAuth 来源尚未配置。' }, 403);
@@ -138,12 +159,22 @@ async function handleCallback(request, env, fetchImpl) {
   const url = new URL(request.url);
   const code = url.searchParams.get('code');
   const state = url.searchParams.get('state');
-  if (!code || !state) return json({ error: '缺少 OAuth 回调参数。' }, 400);
+  if (!state) return json({ error: '缺少 OAuth 回调参数。' }, 400);
 
   const stateData = await verifyState(state, env.GITHUB_CLIENT_SECRET);
   if (!stateData || stateData.origin !== cmsOrigin || stateData.redirectUri !== expectedRedirect(request)) {
     return json({ error: 'OAuth 状态校验失败，请重新登录。' }, 403);
   }
+
+  const providerError = url.searchParams.get('error');
+  if (providerError) {
+    const description = url.searchParams.get('error_description');
+    const message = description || (providerError === 'access_denied' ? '你已取消 GitHub 授权。' : 'GitHub 授权未完成。');
+    return new Response(callbackErrorHtml(message, cmsOrigin), {
+      headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' }
+    });
+  }
+  if (!code) return json({ error: '缺少 OAuth 回调参数。' }, 400);
 
   const tokenResponse = await fetchImpl(GITHUB_TOKEN_URL, {
     method: 'POST',
@@ -155,9 +186,19 @@ async function handleCallback(request, env, fetchImpl) {
       redirect_uri: stateData.redirectUri
     })
   });
-  if (!tokenResponse.ok) return json({ error: 'GitHub 登录交换失败，请稍后重试。' }, 502);
+  if (!tokenResponse.ok) {
+    return new Response(callbackErrorHtml('GitHub 登录交换失败，请稍后重试。', cmsOrigin), {
+      status: 502,
+      headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' }
+    });
+  }
   const tokenData = await tokenResponse.json();
-  if (!tokenData.access_token) return json({ error: 'GitHub 未返回有效登录令牌。' }, 502);
+  if (!tokenData.access_token) {
+    return new Response(callbackErrorHtml('GitHub 未返回有效登录令牌。', cmsOrigin), {
+      status: 502,
+      headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' }
+    });
+  }
 
   return new Response(callbackHtml(tokenData.access_token, cmsOrigin), {
     headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' }
@@ -172,6 +213,6 @@ export async function handleRequest(request, env = {}, _ctx = {}, fetchImpl = fe
   return json({ error: '找不到请求的地址。' }, 404);
 }
 
-export { createState, verifyState, callbackHtml, normalizeOrigin };
+export { createState, verifyState, callbackHtml, callbackErrorHtml, normalizeOrigin };
 
 export default { fetch: handleRequest };
