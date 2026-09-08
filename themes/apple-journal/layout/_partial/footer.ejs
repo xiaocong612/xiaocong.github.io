@@ -1,11 +1,34 @@
 <%
   const settings = site.data && site.data.settings ? site.data.settings : {};
+  const githubSetting = settings.social && typeof settings.social.github === 'string'
+    ? settings.social.github.trim()
+    : '';
+  let safeGithubUrl = '';
+
+  if (githubSetting) {
+    try {
+      const githubUrl = new URL(githubSetting);
+      const githubPath = /^\/[A-Za-z0-9._~-]+(?:\/[A-Za-z0-9._~-]+)*\/?$/.test(githubUrl.pathname);
+      if (
+        githubUrl.protocol === 'https:' &&
+        githubUrl.hostname === 'github.com' &&
+        !githubUrl.username &&
+        !githubUrl.password &&
+        !githubUrl.port &&
+        githubPath
+      ) {
+        safeGithubUrl = githubUrl.toString();
+      }
+    } catch (_) {
+      safeGithubUrl = '';
+    }
+  }
 %>
 <footer class="site-footer">
   <div class="content-width footer-inner">
     <p><%= settings.footer_note || '保持好奇，持续记录。' %></p>
     <div class="footer-links">
-      <% if (settings.social && settings.social.github) { %><a href="<%= settings.social.github %>" rel="me noopener" target="_blank">GitHub <span aria-hidden="true">↗</span></a><% } %>
+      <% if (safeGithubUrl) { %><a href="<%= safeGithubUrl %>" rel="me noopener" target="_blank">GitHub <span aria-hidden="true">↗</span></a><% } %>
       <span>© <%= new Date().getFullYear() %> <%= config.author %></span>
     </div>
   </div>

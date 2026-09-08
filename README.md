@@ -43,7 +43,7 @@ npm run publish -- "更新文章"
 
 脚本会先检查文章和站点，再提交并推送 `main` 分支到 `origin/main`；首次推送会建立上游分支。GitHub Actions 会自动生成 `public/` 并发布到 GitHub Pages；`public/` 不提交到源码仓库。
 
-首次发布前需要将本地分支命名为 `main`、配置 `origin` 为目标 GitHub 仓库，并在仓库的 Pages 设置中选择 GitHub Actions。覆盖已有远程历史属于高风险操作，只能在已确认目标仓库和覆盖范围后单独执行。
+如果把本项目迁移到新的仓库，首次发布前需要将本地分支命名为 `main`、配置 `origin` 为目标 GitHub 仓库，并在仓库的 Pages 设置中选择 GitHub Actions。本仓库已经完成这些设置。覆盖已有远程历史属于高风险操作，只能在已确认目标仓库和覆盖范围后单独执行。
 
 ## 网页后台
 
@@ -54,13 +54,14 @@ npm run publish -- "更新文章"
 1. 创建 GitHub OAuth App，回调地址填写 `https://你的-worker域名/callback`。
 2. 按 `worker/README.md` 部署 Worker，并设置 `GITHUB_CLIENT_ID`、`GITHUB_CLIENT_SECRET` 两个密钥。
 3. 将 Worker 的公开根地址写入 `source/admin/config.yml` 的 `base_url`，并保持 `auth_endpoint: auth`。
-4. 确认 Worker 的 `CMS_ORIGIN` 为 `https://xiaocong612.github.io`。这是来源地址，不能附加项目路径或 `/admin/`；再在 GitHub 仓库设置 Pages 使用 GitHub Actions。
+4. 确认 Worker 的 `CMS_ORIGIN` 为 `https://xiaocong612.github.io`。这是来源地址，不能附加项目路径或 `/admin/`。本仓库的 GitHub Pages 已使用 GitHub Actions 发布。
 
 ## 内容安全
 
 - Markdown 渲染会净化不安全的 HTML 和链接，阻止脚本、事件处理属性与 `javascript:` 链接进入文章页面。
 - 搜索结果使用安全的 DOM 文本节点渲染，并只接受站内路径，避免索引内容把读者带往不受信任的地址。
 - CMS 的 OAuth 授权范围固定为 GitHub 的 `public_repo`，Worker 不接受浏览器扩大授权范围；OAuth 密钥和真实 Worker 地址不得提交到仓库。
+- 根目录 `.gitignore` 已忽略本地环境变量、私钥和证书文件；不要用 `git add -f` 强行加入这些文件。
 
 ## 目录说明
 
@@ -80,6 +81,6 @@ npm run check
 git diff --check
 ```
 
-当前自动化测试共 28 项。提交或发布前应依次完成以上检查。
+当前自动化测试共 31 项。提交或发布前应依次完成以上检查。
 
 所有站点文案、文章和说明文档均使用中文；命令、路径、配置键和第三方产品名保留原格式，便于直接执行或检索。
