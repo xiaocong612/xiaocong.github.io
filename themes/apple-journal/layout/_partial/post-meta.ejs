@@ -1,8 +1,12 @@
 <%
   const metaTags = post.tags && post.tags.toArray ? post.tags.toArray() : [];
+  const plainContent = strip_html(post.content || '');
+  const chineseCharacters = (plainContent.match(/[\u3400-\u9fff]/gu) || []).length;
+  const nonChineseWords = plainContent.replace(/[\u3400-\u9fff]/gu, ' ').trim().split(/\s+/).filter(Boolean).length;
+  const readingMinutes = Math.max(1, Math.ceil((chineseCharacters + nonChineseWords * 1.35) / 300));
 %>
 <% const isFooter = typeof footer !== 'undefined' && Boolean(footer); %>
 <div class="post-meta<%= isFooter ? ' post-meta-footer' : '' %>">
-  <% if (!isFooter) { %><span><%= Math.max(1, Math.round(strip_html(post.content || '').split(/\s+/).length / 220)) %> 分钟阅读</span><% } %>
+  <% if (!isFooter) { %><span><%= readingMinutes %> 分钟阅读</span><% } %>
   <% if (metaTags.length) { %><div class="tag-list"><% metaTags.forEach(tag => { %><a href="<%= url_for(tag.path) %>">#<%= tag.name %></a><% }); %></div><% } %>
 </div>

@@ -1,5 +1,6 @@
 const GITHUB_AUTHORIZE_URL = 'https://github.com/login/oauth/authorize';
 const GITHUB_TOKEN_URL = 'https://github.com/login/oauth/access_token';
+const GITHUB_OAUTH_SCOPE = 'public_repo';
 const encoder = new TextEncoder();
 
 function json(data, status = 200) {
@@ -102,7 +103,8 @@ async function handleAuth(request, env) {
   const githubUrl = new URL(GITHUB_AUTHORIZE_URL);
   githubUrl.searchParams.set('client_id', env.GITHUB_CLIENT_ID);
   githubUrl.searchParams.set('redirect_uri', redirectUri);
-  githubUrl.searchParams.set('scope', url.searchParams.get('scope') || 'repo');
+  // Scope must remain server-controlled; query parameters come from the browser.
+  githubUrl.searchParams.set('scope', GITHUB_OAUTH_SCOPE);
   githubUrl.searchParams.set('state', state);
   return Response.redirect(githubUrl.toString(), 302);
 }

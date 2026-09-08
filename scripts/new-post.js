@@ -25,9 +25,10 @@ function createPost({ title, rootDir = process.cwd(), date = localDate() }) {
     throw new Error('请提供文章标题，例如：npm run post -- "我的新文章"');
   }
 
+  const normalizedTitle = String(title).trim();
   const postsDir = path.join(rootDir, 'source', '_posts');
   fs.mkdirSync(postsDir, { recursive: true });
-  const baseName = `${date.slice(0, 10)}-${safeSlug(String(title))}`;
+  const baseName = `${date.slice(0, 10)}-${safeSlug(normalizedTitle)}`;
   let filePath = path.join(postsDir, `${baseName}.md`);
   let suffix = 2;
   while (fs.existsSync(filePath)) {
@@ -36,7 +37,7 @@ function createPost({ title, rootDir = process.cwd(), date = localDate() }) {
   }
 
   const content = `---
-title: ${String(title).trim()}
+title: ${JSON.stringify(normalizedTitle)}
 description:
 date: ${date}
 categories:

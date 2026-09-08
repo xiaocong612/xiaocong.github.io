@@ -30,6 +30,20 @@ test('缺少 OAuth 回调参数返回 400', async () => {
   assert.match(await response.text(), /缺少 OAuth 回调参数/);
 });
 
+test('授权范围固定为公开仓库权限，忽略浏览器传入的范围', async () => {
+  const { handleRequest } = await workerModule;
+  const response = await handleRequest(
+    new Request('https://oauth.example.workers.dev/auth?scope=repo%20delete_repo'),
+    env
+  );
+  const githubUrl = new URL(response.headers.get('location'));
+
+  assert.equal(response.status, 302);
+  assert.equal(githubUrl.origin, 'https://github.com');
+  assert.equal(githubUrl.pathname, '/login/oauth/authorize');
+  assert.equal(githubUrl.searchParams.get('scope'), 'public_repo');
+});
+
 test('成功回调生成 Decap 登录消息', async () => {
   const { createState, handleRequest } = await workerModule;
   const redirectUri = 'https://oauth.example.workers.dev/callback';
