@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "node --test ../test/worker.test.js",
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "dev": "wrangler dev src/index.js --config wrangler.toml",
+    "deploy": "wrangler deploy src/index.js --config wrangler.toml"
   },
   "devDependencies": {
     "wrangler": "^4.30.0"

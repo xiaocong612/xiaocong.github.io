@@ -11,15 +11,17 @@
 
 ## 部署命令
 
-在 `worker` 目录执行：
+在 `worker` 目录执行。由于示例配置文件名不是 Wrangler 的默认配置名，命令需显式传入 `--config`：
 
 ```bash
 npm install
 npx wrangler login
-npx wrangler secret put GITHUB_CLIENT_ID
-npx wrangler secret put GITHUB_CLIENT_SECRET
-npx wrangler deploy
+npx wrangler secret put GITHUB_CLIENT_ID --config wrangler.toml
+npx wrangler secret put GITHUB_CLIENT_SECRET --config wrangler.toml
+npx wrangler deploy src/index.js --config wrangler.toml
 ```
+
+先将 `wrangler.toml.example` 复制为 `wrangler.toml`，再执行上面的命令。`wrangler.toml` 已被 `.gitignore` 忽略，不要提交其中的本地配置。
 
 部署完成后，分别检查下面三个不同用途的地址：
 

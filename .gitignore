@@ -10,6 +10,7 @@ _multiconfig.yml
 .wrangler/
 worker/.dev.vars
 worker/.env
+worker/wrangler.toml
 # 本地环境变量、密钥和证书不得进入源码仓库
 .env
 .env.*

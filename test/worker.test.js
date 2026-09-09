@@ -1,7 +1,10 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const workerModule = import('../worker/src/index.js');
+const rootDir = path.join(__dirname, '..');
 
 const env = {
   CMS_ORIGIN: 'https://xiaocong612.github.io',
@@ -10,6 +13,12 @@ const env = {
   REPO_OWNER: 'xiaocong612',
   REPO_NAME: 'xiaocong.github.io'
 };
+
+test('Worker 部署脚本显式指定入口和本地配置', () => {
+  const packageJson = JSON.parse(fs.readFileSync(path.join(rootDir, 'worker', 'package.json'), 'utf8'));
+  assert.match(packageJson.scripts.dev, /wrangler dev src\/index\.js --config wrangler\.toml/);
+  assert.match(packageJson.scripts.deploy, /wrangler deploy src\/index\.js --config wrangler\.toml/);
+});
 
 test('未配置 CMS 来源时拒绝 OAuth 请求', async () => {
   const { handleRequest } = await workerModule;
