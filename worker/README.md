@@ -14,7 +14,7 @@
 在 `worker` 目录执行。由于示例配置文件名不是 Wrangler 的默认配置名，命令需显式传入 `--config`：
 
 ```bash
-npm install
+npm ci
 npx wrangler login
 npx wrangler secret put GITHUB_CLIENT_ID --config wrangler.toml
 npx wrangler secret put GITHUB_CLIENT_SECRET --config wrangler.toml

@@ -2,7 +2,7 @@ backend:
   name: github
   repo: xiaocong612/xiaocong.github.io
   branch: main
-  base_url: https://blog-oauth-worker.example.workers.dev
+  base_url: https://xiaocong-blog-oauth.xiaocong-blog-oauth-worker.workers.dev
   auth_endpoint: auth
   auth_scope: public_repo
 
