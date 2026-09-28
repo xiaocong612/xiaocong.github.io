@@ -10,7 +10,7 @@
     "preview": "hexo server",
     "check": "node scripts/check-site.js",
     "publish": "node scripts/publish.js",
-    "test": "node --test test/*.test.js"
+    "test": "node --test --test-concurrency=1 test/*.test.js"
   },
   "hexo": {
     "version": "8.1.2"

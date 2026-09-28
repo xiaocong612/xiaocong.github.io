@@ -1,0 +1,25 @@
+<%
+  const allTags = site.tags && site.tags.toArray ? site.tags.toArray().sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')) : [];
+%>
+<div class="page-workbench content-width">
+  <%- partial('_partial/sidebar', { posts: site.posts.sort('date', -1).toArray() }) %>
+  <div class="listing-shell content-panel">
+    <header class="listing-header">
+      <p class="section-kicker">索引</p>
+      <h1>标签</h1>
+      <p>按主题浏览所有带标签的记录。</p>
+    </header>
+    <% if (allTags.length) { %>
+      <div class="tag-index-list" aria-label="全部标签">
+        <% allTags.forEach(tag => { %>
+          <a class="tag-index-item" href="<%= url_for(tag.path) %>">
+            <span>#<%= tag.name %></span>
+            <small><%= tag.posts ? tag.posts.length : 0 %> 篇</small>
+          </a>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <p class="empty-state">暂无标签。</p>
+    <% } %>
+  </div>
+</div>
