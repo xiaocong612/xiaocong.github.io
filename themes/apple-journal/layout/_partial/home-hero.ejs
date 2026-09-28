@@ -1,0 +1,40 @@
+<%
+  const cleanText = value => typeof value === 'string' ? value.trim() : '';
+  const phrases = (Array.isArray(home.phrases) ? home.phrases : []).map(item => cleanText(item && item.text)).filter(Boolean);
+  if (!phrases.length) phrases.push('欢迎来到我的小窝');
+  const quotes = (Array.isArray(home.quotes) ? home.quotes : []).map(item => ({ text: cleanText(item && item.text), author: cleanText(item && item.author) })).filter(item => item.text);
+  if (!quotes.length) quotes.push({ text: '保持好奇，持续记录。', author: '' });
+%>
+<section class="nature-hero" aria-labelledby="intro-title" data-home-hero>
+  <div class="nature-hero-media" aria-hidden="true">
+    <img class="nature-hero-image" src="<%= url_for('/images/blog-hero-nature-a.webp') %>" alt="" width="3840" height="2160" fetchpriority="high">
+    <div class="nature-hero-shade"></div>
+  </div>
+  <div class="content-width nature-hero-inner">
+    <h1 id="intro-title"><%= settings.site_name || config.title %></h1>
+    <p class="hero-subtitle"><%= cleanText(home.subtitle) || settings.tagline || '技术、学习与生活的长期记录' %></p>
+    <div class="hero-typing">
+      <% phrases.forEach(text => { %><span class="hero-typing-reserve" aria-hidden="true" data-phrase><%= text %></span><% }); %>
+      <p class="hero-typing-line" aria-hidden="true"><span data-typed-text><%= phrases[0] %></span><span class="hero-cursor">|</span></p>
+      <span class="visually-hidden"><%= phrases.join('。') %></span>
+    </div>
+    <figure class="hero-quote">
+      <div class="hero-quote-stack">
+        <% quotes.forEach(quote => { %>
+          <div class="hero-quote-reserve" aria-hidden="true" data-quote-entry>
+            <p data-quote-entry-text><%= quote.text %></p>
+            <span class="hero-quote-author" data-quote-entry-author><%= quote.author %></span>
+          </div>
+        <% }); %>
+        <blockquote class="hero-quote-content" aria-live="polite" aria-atomic="true" data-quote-content>
+          <p data-quote-text><%= quotes[0].text %></p>
+          <cite class="hero-quote-author" data-quote-author<% if (!quotes[0].author) { %> hidden<% } %>><%= quotes[0].author %></cite>
+        </blockquote>
+      </div>
+      <button class="hero-quote-next" type="button" aria-label="换一句" title="换一句" data-quote-next hidden>
+        <img src="<%= url_for('/images/icons/refresh-cw.svg') %>" width="18" height="18" alt="" aria-hidden="true">
+      </button>
+    </figure>
+  </div>
+  <a class="scroll-hint" href="#latest-posts" aria-label="滚动到最近更新"><span aria-hidden="true">↓</span></a>
+</section>

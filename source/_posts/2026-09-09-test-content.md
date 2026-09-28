@@ -50,7 +50,7 @@ draft: false
 
 ## 组件测试
 
-```
+``` C
 #include <stdio.h>
 int main()
 

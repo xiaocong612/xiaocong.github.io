@@ -1,4 +1,6 @@
-<article class="reading-shell content-width page-shell">
+<div class="page-workbench content-width">
+  <%- partial('_partial/sidebar', { posts: site.posts.sort('date', -1).toArray() }) %>
+  <article class="reading-shell content-panel page-shell">
   <header class="reading-header">
     <p class="section-kicker">页面</p>
     <h1><%= page.title %></h1>
@@ -6,3 +8,4 @@
   </header>
   <div class="article-body prose"><%- page.content %></div>
 </article>
+</div>

@@ -1,0 +1,68 @@
+<%
+  const sidebarPosts = Array.isArray(posts) ? posts : (site.posts && site.posts.sort ? site.posts.sort('date', -1).toArray() : []);
+  const limit = Number(typeof recentLimit === 'undefined' ? 4 : recentLimit) || 4;
+  const tags = [];
+  const categories = [];
+  const seenTags = new Set();
+  const seenCategories = new Set();
+  sidebarPosts.forEach(post => {
+    (post.tags && post.tags.toArray ? post.tags.toArray() : []).forEach(tag => {
+      if (!seenTags.has(tag.name)) { seenTags.add(tag.name); tags.push(tag); }
+    });
+    (post.categories && post.categories.toArray ? post.categories.toArray() : []).forEach(category => {
+      if (!seenCategories.has(category.name)) { seenCategories.add(category.name); categories.push(category); }
+    });
+  });
+  const settings = site.data && site.data.settings ? site.data.settings : {};
+%>
+<aside class="site-sidebar<%= typeof postToc !== 'undefined' && postToc ? ' post-sidebar' : '' %>" aria-label="<%= typeof postToc !== 'undefined' && postToc ? '文章侧栏' : '站点侧栏' %>">
+  <section class="sidebar-profile">
+    <img class="sidebar-avatar" src="<%= url_for('/images/profile-cat.jpg') %>" alt="小聪的头像" width="96" height="96">
+    <p class="sidebar-kicker">个人记录工作台</p>
+    <h2><%= settings.site_name || config.title %></h2>
+    <p><%= settings.intro || config.description %></p>
+    <a class="sidebar-about-link" href="<%= url_for('/about/') %>">关于这份记录 <span aria-hidden="true">↗</span></a>
+  </section>
+
+  <% if (typeof postToc !== 'undefined' && postToc) { %>
+  <div class="post-sidebar-content">
+    <% if (page.toc !== false && page.content && page.content.includes('<h')) { %>
+      <section class="toc-panel" aria-label="文章目录"><%- partial('_partial/toc') %></section>
+    <% } %>
+  <% } %>
+
+  <dl class="sidebar-stats" aria-label="站点统计">
+    <div><dt>文章</dt><dd><%= sidebarPosts.length %></dd></div>
+    <div><dt>标签</dt><dd><%= tags.length %></dd></div>
+    <div><dt>分类</dt><dd><%= categories.length %></dd></div>
+  </dl>
+
+  <section class="sidebar-widget">
+    <div class="sidebar-widget-heading"><h3>最近更新</h3><a href="<%= url_for('/archives/') %>">全部 <span aria-hidden="true">↗</span></a></div>
+    <ol class="sidebar-recent-list">
+      <% sidebarPosts.slice(0, limit).forEach(post => { %>
+        <li><a href="<%= url_for(post.path) %>"><span><%= post.title %></span><time datetime="<%= post.date.toISOString() %>"><%= date(post.date, config.date_format) %></time></a></li>
+      <% }); %>
+      <% if (!sidebarPosts.length) { %><li class="sidebar-empty">暂无文章</li><% } %>
+    </ol>
+  </section>
+
+  <section class="sidebar-widget">
+    <div class="sidebar-widget-heading"><h3>标签</h3><a href="<%= url_for('/tags/') %>">浏览 <span aria-hidden="true">↗</span></a></div>
+    <div class="sidebar-chip-list">
+      <% tags.slice(0, 12).forEach(tag => { %><a href="<%= url_for(tag.path) %>">#<%= tag.name %></a><% }); %>
+      <% if (!tags.length) { %><span class="sidebar-empty">暂无标签</span><% } %>
+    </div>
+  </section>
+
+  <section class="sidebar-widget">
+    <div class="sidebar-widget-heading"><h3>分类</h3><a href="<%= url_for('/archives/') %>">浏览 <span aria-hidden="true">↗</span></a></div>
+    <ul class="sidebar-category-list">
+      <% categories.forEach(category => { %><li><a href="<%= url_for(category.path) %>"><span><%= category.name %></span><span aria-hidden="true">↗</span></a></li><% }); %>
+      <% if (!categories.length) { %><li class="sidebar-empty">暂无分类</li><% } %>
+    </ul>
+  </section>
+  <% if (typeof postToc !== 'undefined' && postToc) { %>
+  </div>
+  <% } %>
+</aside>

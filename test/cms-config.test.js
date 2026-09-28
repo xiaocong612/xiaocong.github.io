@@ -55,3 +55,22 @@ test('关于页和站点设置写回预期文件', () => {
   assert.equal(about.files[0].file, 'source/about/index.md');
   assert.equal(settings.files[0].file, 'source/_data/settings.yml');
 });
+
+test('首页内容的两套可编辑句库写回独立数据文件', () => {
+  const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
+  const collection = config.collections.find(item => item.name === 'home');
+  assert.ok(collection, '后台需要首页内容集合');
+  const file = collection.files[0];
+  assert.equal(file.file, 'source/_data/home.yml');
+  const data = yaml.load(fs.readFileSync(path.join(rootDir, file.file), 'utf8'));
+  for (const name of ['phrases', 'quotes']) {
+    const field = file.fields.find(item => item.name === name);
+    assert.equal(field.widget, 'list');
+    assert.notEqual(field.allow_add, false);
+    assert.ok(field.fields.some(item => item.name === 'text'));
+    assert.ok(data[name].length > 1);
+    assert.ok(data[name].every(item => typeof item.text === 'string' && item.text.trim()));
+  }
+  const author = file.fields.find(item => item.name === 'quotes').fields.find(item => item.name === 'author');
+  assert.equal(author.required, false);
+});

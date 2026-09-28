@@ -1,4 +1,6 @@
-<article class="reading-shell content-width">
+<div class="page-workbench content-width">
+  <%- partial('_partial/sidebar', { posts: site.posts.sort('date', -1).toArray(), postToc: true }) %>
+  <article class="reading-shell content-panel">
   <header class="reading-header">
     <div class="post-labels">
       <% const categories = page.categories && page.categories.toArray ? page.categories.toArray() : []; %>
@@ -11,9 +13,6 @@
   </header>
   <% if (page.cover) { %><figure class="reading-cover"><img src="<%= url_for(page.cover) %>" alt="<%= page.title %> 的封面图"><% if (page.cover_caption) { %><figcaption><%= page.cover_caption %></figcaption><% } %></figure><% } %>
   <div class="reading-layout">
-    <% if (page.toc !== false && page.content && page.content.includes('<h')) { %>
-      <aside class="toc-panel" aria-label="文章目录"><%- partial('_partial/toc') %></aside>
-    <% } %>
     <div class="article-body prose"><%- page.content %></div>
   </div>
   <footer class="reading-footer">
@@ -21,3 +20,4 @@
     <%- partial('_partial/post-meta', { post: page, footer: true }) %>
   </footer>
 </article>
+</div>

@@ -57,6 +57,33 @@ collections:
           - { label: 页面布局, name: layout, widget: hidden, default: page }
           - { label: 正文, name: body, widget: markdown }
 
+  - name: home
+    label: 首页内容
+    description: 管理首页小标题、打字文案和哲言名句；发布并完成站点部署后生效。
+    files:
+      - name: home-content
+        label: 文案与名句
+        file: source/_data/home.yml
+        fields:
+          - { label: 小标题, name: subtitle, widget: string, required: false }
+          - label: 打字文案库
+            name: phrases
+            widget: list
+            required: false
+            summary: '{{fields.text}}'
+            collapsed: true
+            fields:
+              - { label: 文案, name: text, widget: string }
+          - label: 哲言名句库
+            name: quotes
+            widget: list
+            required: false
+            summary: '{{fields.text}}'
+            collapsed: true
+            fields:
+              - { label: 名句, name: text, widget: text }
+              - { label: 作者或出处, name: author, widget: string, required: false }
+
   - name: settings
     label: 站点设置
     description: 编辑首页介绍、页脚和社交链接。

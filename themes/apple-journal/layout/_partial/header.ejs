@@ -1,4 +1,5 @@
-<header class="site-header">
+<% const isHome = page.layout === 'index' || page.layout === 'home' || page.path === 'index.html' || page.path === ''; %>
+<header class="site-header<%= isHome ? ' site-header-home' : '' %>">
   <div class="content-width header-inner">
     <a class="brand" href="<%= url_for('/') %>" aria-label="返回首页"><span class="brand-mark" aria-hidden="true">●</span><span><%= config.title %></span></a>
     <nav class="site-nav" aria-label="主导航">
